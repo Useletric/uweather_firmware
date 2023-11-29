@@ -1,7 +1,5 @@
 #include "main.h"
 
-
-
 void setup() {
   Serial.begin(115200);
   pinMode(SENSOR_PIN,INPUT);

@@ -1,5 +1,7 @@
 // rtos.cpp
+#include "structs.h"
 #include "rtos.h"
+
 
 extern struct anemometro    struct_anemometro;
 extern struct bme280        struct_bme280;

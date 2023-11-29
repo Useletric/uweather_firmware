@@ -1,11 +1,14 @@
+//sensor.cpp
+#include "structs.h"
 #include "sensor.h"
 
 Adafruit_BME280 bme; // I2C
 
-    extern struct anemometro    struct_anemometro;
-    extern struct bme280        struct_bme280;
-    extern struct tensaoPainel  struct_tensaoPainelSolar;
-    extern struct tensaoBateria struct_tensaoBateriaInterna;
+extern struct anemometro    struct_anemometro;
+extern struct bme280        struct_bme280;
+extern struct tensaoPainel  struct_tensaoPainelSolar;
+extern struct tensaoBateria struct_tensaoBateriaInterna;
+extern struct system        struct_systemConfig;
 
 void initBME280(){
     Serial.println(F("BME280 test"));
@@ -58,8 +61,7 @@ void windvelocity() {
   struct_anemometro.windspeed = 0;
   struct_anemometro.counter = 0;
   attachInterrupt(digitalPinToInterrupt(SENSOR_PIN), addcount, RISING);
-    Serial.print(" INPUT: ");
-    Serial.print(digitalRead(SENSOR_PIN));
+
   vTaskDelay(pdMS_TO_TICKS(struct_anemometro.period));
 }
 

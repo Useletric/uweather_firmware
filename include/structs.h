@@ -1,5 +1,5 @@
-#ifndef STRUCTS_H
-#define STRUCTS_H
+#ifndef _STRUCTS_H_
+    #define _STRUCTS_H_
 
     /* Importação do framework Arduino */
     #include <Arduino.h>
