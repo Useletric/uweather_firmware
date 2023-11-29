@@ -37,6 +37,9 @@
         struct system{
             int timer_ReadSensors = 2000;
             int timer_MQTTConnection = 30000;
+            int timer_system = 0;
+            char Buffer[254] = "";
+            String infoSensor = "";
 
         };
 

@@ -12,14 +12,12 @@
 #define SENSOR_PIN 32
 
 void initBME280();
-float tempBME();
-float umiBME();
-float presureBME();
-float aproxAltBME();
-
+void getDataBME280();
 void windvelocity();
 void RPMCalc();
 void WindSpeed();
 void SpeedWind(); 
 void addcount();
+
+void ShowData();
 #endif

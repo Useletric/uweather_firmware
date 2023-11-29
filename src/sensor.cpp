@@ -44,14 +44,14 @@ float presureBME(){
     return bme.readPressure()/100.0F;
 
 }
+void getDataBME280(){
+    struct_bme280.altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
+    struct_bme280.pressure = bme.readPressure()/100.0F;
+    struct_bme280.temp = bme.readTemperature();
+    struct_bme280.umi = bme.readHumidity();
 
-float aproxAltBME(){
-    Serial.print("Approx. Altitude = ");
-    Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
-    Serial.println(" m");
-
-    return bme.readAltitude(SEALEVELPRESSURE_HPA);
 }
+
 
 void windvelocity() {
   struct_anemometro.speedwind = 0;
@@ -84,3 +84,16 @@ void addcount() {
   struct_anemometro.counter++;
 }
 
+void ShowData(){
+    sprintf(struct_systemConfig.Buffer, "Contador: %d ; RPM: %d ; Vel. Vento: %.4f [km/h] ; Temperatura: %.4f [°C] ; Umidade: %.4f [%] ; Pressão %.4f [hPa] ; Altitude: %.4f [m]",
+                                            struct_anemometro.counter,
+                                            struct_anemometro.RPM,
+                                            struct_anemometro.speedwind,
+                                            struct_bme280.temp,
+                                            struct_bme280.umi,
+                                            struct_bme280.pressure,
+                                            struct_bme280.altitude
+                                            );
+    struct_systemConfig.infoSensor = String(struct_systemConfig.Buffer);  
+    Serial.println(struct_systemConfig.infoSensor);
+}
