@@ -34,9 +34,16 @@
 
         };
 
+        struct system{
+            int timer_ReadSensors = 2000;
+            int timer_MQTTConnection = 30000;
+
+        };
+
         extern struct anemometro    struct_anemometro;
         extern struct bme280        struct_bme280;
         extern struct tensaoPainel  struct_tensaoPainelSolar;
         extern struct tensaoBateria struct_tensaoBateriaInterna;
+        extern struct system        struct_systemConfig;
 
 #endif

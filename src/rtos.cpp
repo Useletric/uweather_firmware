@@ -1,20 +1,13 @@
 // rtos.cpp
 #include "rtos.h"
 
+        extern struct anemometro    struct_anemometro;
+        extern struct bme280        struct_bme280;
+        extern struct tensaoPainel  struct_tensaoPainelSolar;
+        extern struct tensaoBateria struct_tensaoBateriaInterna;
+        extern struct system        struct_systemConfig;
+
 SemaphoreHandle_t xSemaphore;
-
-// --- Constantes ---
-const float pi = 3.14159265;     //Número de pi
-int period = 5000;               //Tempo de medida(miliseconds)
-int delaytime = 2000;            //Invervalo entre as amostras (miliseconds)
-int radius = 147;                //Raio do anemometro(mm)
-
-// --- Variáveis Globais ---
-unsigned int Sample  = 0;        //Armazena o número de amostras
-unsigned int counter = 0;        //Contador para o sensor
-unsigned int RPM = 0;            //Rotações por minuto
-float speedwind = 0;             //Velocidade do vento (m/s)
-float windspeed = 0;             //Velocidade do vento (km/h)
 
 TaskHandle_t xTaskSensorHandle;
 TaskHandle_t xTaskMQTTHandle;
@@ -45,48 +38,32 @@ void vTaskSensor(void *pvParameters) {
 
     Serial.println("   Finalizado.");
     Serial.print("Contador: ");
-    Serial.print(counter);
+    Serial.print(struct_anemometro.counter);
     Serial.print(";  RPM: ");
     
     // Chama a função para calcular o RPM
     RPMCalc();
-    Serial.print(RPM);
+    Serial.print(struct_anemometro.RPM);
     Serial.print(";  Vel. Vento: ");
 
     // Chama a função para calcular a velocidade do vento em m/s
     WindSpeed();
-    Serial.print(windspeed);
+    Serial.print(struct_anemometro.windspeed);
     Serial.print(" [m/s] ");
 
     // Chama a função para calcular a velocidade do vento em km/h
     SpeedWind();
-    Serial.print(speedwind);
+    Serial.print(struct_anemometro.speedwind);
     Serial.print(" [km/h] ");
     Serial.println();
     Serial.print(" INPUT: ");
     Serial.print(digitalRead(SENSOR_PIN));
     Serial.println();
-    float temp =  tempBME();
 
-    float umi = umiBME();
 
-    float pressure =  presureBME();
 
-    float altitude = aproxAltBME();
-
-    xQueueOverwrite(xFila, &speedwind);/* envia valor atual de count para fila*/
-    vTaskDelay(pdMS_TO_TICKS(delaytime));
+    vTaskDelay(pdMS_TO_TICKS(struct_systemConfig.timer_ReadSensors));
   }
-}
-
-void windvelocity() {
-  speedwind = 0;
-  windspeed = 0;
-  counter = 0;
-  attachInterrupt(digitalPinToInterrupt(SENSOR_PIN), addcount, RISING);
-    Serial.print(" INPUT: ");
-    Serial.print(digitalRead(SENSOR_PIN));
-  vTaskDelay(pdMS_TO_TICKS(period));
 }
 
 /*Implementação da Task MQTT */
@@ -121,23 +98,3 @@ void vTaskMQTT(void *pvParameters){
 }
 
 
-void RPMCalc() {
-  if (period != 0) {
-    RPM = ((counter) * 60) / (period / 1000);
-  } else {
-    // Tratar o caso de divisão por zero, se necessário
-    RPM = 0;
-  }
-}
-
-void WindSpeed() {
-  windspeed = ((4 * pi * radius * RPM) / 60) / 1000;
-}
-
-void SpeedWind() {
-  speedwind = (((4 * pi * radius * RPM) / 60) / 1000) * 3.6;
-}
-
-void addcount() {
-  counter++;
-}

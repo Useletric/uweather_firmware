@@ -11,11 +11,7 @@
 #include <freertos/queue.h>
 
 void rtosInit();
-void windvelocity();
-void RPMCalc();
-void WindSpeed();
-void SpeedWind(); 
-void addcount();
-void printMSG();
+
+
 
 #endif

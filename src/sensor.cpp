@@ -1,5 +1,12 @@
 #include "sensor.h"
+
 Adafruit_BME280 bme; // I2C
+
+    extern struct anemometro    struct_anemometro;
+    extern struct bme280        struct_bme280;
+    extern struct tensaoPainel  struct_tensaoPainelSolar;
+    extern struct tensaoBateria struct_tensaoBateriaInterna;
+
 void initBME280(){
     Serial.println(F("BME280 test"));
     bool status;
@@ -46,6 +53,34 @@ float aproxAltBME(){
     return bme.readAltitude(SEALEVELPRESSURE_HPA);
 }
 
-void getDataBME(){
-
+void windvelocity() {
+  struct_anemometro.speedwind = 0;
+  struct_anemometro.windspeed = 0;
+  struct_anemometro.counter = 0;
+  attachInterrupt(digitalPinToInterrupt(SENSOR_PIN), addcount, RISING);
+    Serial.print(" INPUT: ");
+    Serial.print(digitalRead(SENSOR_PIN));
+  vTaskDelay(pdMS_TO_TICKS(struct_anemometro.period));
 }
+
+void RPMCalc() {
+  if (struct_anemometro.period != 0) {
+    struct_anemometro.RPM = ((struct_anemometro.counter) * 60) / (struct_anemometro.period / 1000);
+  } else {
+    // Tratar o caso de divisão por zero, se necessário
+    struct_anemometro.RPM = 0;
+  }
+}
+
+void WindSpeed() {
+  struct_anemometro.windspeed = ((4 * struct_anemometro.pi * struct_anemometro.radius * struct_anemometro.RPM) / 60) / 1000;
+}
+
+void SpeedWind() {
+  struct_anemometro.speedwind = (((4 * struct_anemometro.pi * struct_anemometro.radius * struct_anemometro.RPM) / 60) / 1000) * 3.6;
+}
+
+void addcount() {
+  struct_anemometro.counter++;
+}
+
