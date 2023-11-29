@@ -30,7 +30,9 @@ void rtosInit() {
   xTimer = xTimerCreate("TIMER1",pdMS_TO_TICKS(1000),pdTRUE,0,callBackTimer1);
 
   xTaskCreatePinnedToCore(vTaskSensor, "TaskSensor", configMINIMAL_STACK_SIZE + 4096, NULL, 1, &xTaskSensorHandle, APP_CPU_NUM);
-  xTaskCreatePinnedToCore(vTaskMQTT,  "TaskMQTT",  configMINIMAL_STACK_SIZE + 2048,  NULL,  2,  &xTaskMQTTHandle,PRO_CPU_NUM);  
+  xTaskCreatePinnedToCore(vTaskMQTT,  "TaskMQTT",  configMINIMAL_STACK_SIZE + 2048,  NULL,  2,  &xTaskMQTTHandle,PRO_CPU_NUM);
+
+  xTimerStart(xTimer,0);  
 }
 
 void vTaskSensor(void *pvParameters) {
@@ -56,6 +58,8 @@ void vTaskSensor(void *pvParameters) {
     // Chama a função para calcular a velocidade do vento em km/h
     SpeedWind();
 
+    // Coleta dados do BME280
+    getDataBME280();
     // Chama a função para mostrar os dados
     ShowData();
 
