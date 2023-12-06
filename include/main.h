@@ -3,7 +3,7 @@
     #include "rtos.h"
     #include "sensor.h"
     #include "mqtt.h"
-
+    #include "sdfile.h"
     
 
 #endif //_MAIN_H_

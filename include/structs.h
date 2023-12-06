@@ -42,6 +42,8 @@
             int timer_system = 0;
             char Buffer[254] = "";
             String infoSensor = "";
+            uint32_t chipId = 0;
+            uint64_t multiplicador = 0xA93;
 
         };
 

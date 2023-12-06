@@ -63,7 +63,7 @@ void vTaskSensor(void *pvParameters) {
     // Chama a função para mostrar os dados
     ShowData();
     struct_tensaoPainelSolar.voltage = ((voltageInput(VOLT_PIN) * 3.3)/4095)/ (330000.0 / (1000000.0 + 1000000.0));
-    struct_tensaoBateriaInterna.voltage = ((voltageInput(VOLT_BAT)*4.2)/4095);
+    struct_tensaoBateriaInterna.voltage = ((voltageInput(VOLT_BAT)*4.2)/4095)*2;
     Serial.println(struct_tensaoPainelSolar.voltage);
 
     vTaskDelay(pdMS_TO_TICKS(struct_systemConfig.timer_ReadSensors));
