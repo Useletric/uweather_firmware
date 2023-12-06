@@ -10,7 +10,9 @@
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 #define SENSOR_PIN 32
-
+#define VOLT_PIN 36
+#define VOLT_BAT 35
+#define AMOSTRAS 12
 void initBME280();
 void getDataBME280();
 void windvelocity();
@@ -18,6 +20,6 @@ void RPMCalc();
 void WindSpeed();
 void SpeedWind(); 
 void addcount();
-
+float voltageInput(uint8_t portaAnalogica);
 void ShowData();
 #endif

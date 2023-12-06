@@ -27,10 +27,12 @@
         };
 
         struct tensaoPainel{
+            float voltage = 0;
 
         };
 
         struct tensaoBateria{
+            float voltage = 0;
 
         };
 

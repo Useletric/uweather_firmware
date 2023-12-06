@@ -62,6 +62,9 @@ void vTaskSensor(void *pvParameters) {
     getDataBME280();
     // Chama a função para mostrar os dados
     ShowData();
+    struct_tensaoPainelSolar.voltage = ((voltageInput(VOLT_PIN) * 3.3)/4095)/ (330000.0 / (1000000.0 + 1000000.0));
+    struct_tensaoBateriaInterna.voltage = ((voltageInput(VOLT_BAT)*4.2)/4095);
+    Serial.println(struct_tensaoPainelSolar.voltage);
 
     vTaskDelay(pdMS_TO_TICKS(struct_systemConfig.timer_ReadSensors));
   }
@@ -84,6 +87,8 @@ void vTaskMQTT(void *pvParameters){
           doc["pressure"] = struct_bme280.pressure;
           doc["altitude"] = struct_bme280.altitude;
           doc["windspeed"] = struct_anemometro.speedwind;
+          doc["solarvolt"] = struct_tensaoPainelSolar.voltage;
+          doc["batvolt"] = struct_tensaoBateriaInterna.voltage;
 
           // Serializar o objeto JSON para a string
           serializeJson(doc, mensagem);   

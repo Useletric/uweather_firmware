@@ -87,15 +87,26 @@ void addcount() {
 }
 
 void ShowData(){
-    sprintf(struct_systemConfig.Buffer, "Contador: %d ; RPM: %d ; Vel. Vento: %.4f [km/h] ; Temperatura: %.4f [°C] ; Umidade: %.4f [%] ; Pressão %.4f [hPa] ; Altitude: %.4f [m]",
+    sprintf(struct_systemConfig.Buffer, "Contador: %d ; RPM: %d ; Vel. Vento: %.4f [km/h] ; Temperatura: %.4f [°C] ; Umidade: %.4f [%] ; Pressão %.4f [hPa] ; Altitude: %.4f [m] ; Tensão Painel: %.4f [V] ; Tensão Bat: %.4f [V]",
                                             struct_anemometro.counter,
                                             struct_anemometro.RPM,
                                             struct_anemometro.speedwind,
                                             struct_bme280.temp,
                                             struct_bme280.umi,
                                             struct_bme280.pressure,
-                                            struct_bme280.altitude
+                                            struct_bme280.altitude,
+                                            struct_tensaoPainelSolar.voltage,
+                                            struct_tensaoBateriaInterna.voltage
                                             );
     struct_systemConfig.infoSensor = String(struct_systemConfig.Buffer);  
     Serial.println(struct_systemConfig.infoSensor);
+}
+
+float voltageInput(uint8_t portaAnalogica){
+    float total=0;  
+    for (int i=0; i<AMOSTRAS; i++) {
+        total += 1.0 * analogRead(portaAnalogica);
+        delay(5);
+    }
+  return total / (float)AMOSTRAS;
 }
