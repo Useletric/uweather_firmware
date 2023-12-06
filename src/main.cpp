@@ -4,10 +4,12 @@ void setup() {
   Serial.begin(115200);
   pinMode(SENSOR_PIN,INPUT);
   getID();
+  
   init_sd();
   debug_sd();
   initBME280();
   mqttInit();     //iniica comunicação com MQTT
+  setClock();
   rtosInit();     //inicialização das tasks e estrutuas do RTOS
 }
 

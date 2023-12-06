@@ -1,10 +1,5 @@
 #include "mqtt.h"
 
-#include <Arduino.h>
-
-/*bibliotecas para MQTT*/
-#include <WiFi.h>
-#include <PubSubClient.h>
 
 /* instacias para WIFI e client*/
 WiFiClient espClient;
@@ -16,9 +11,28 @@ void mqttReconect();
 const char* ssid     = "CAFOFO";
 const char* password = "Bc270299";
 
+
 /* configuraçãoes do broker MQTT*/
 const char* mqttServer = "192.168.10.2";
 const int mqttPort = 1883;
+
+// Set time via NTP, as required for x.509 validation
+void setClock () {
+    configTime (0, 0, "pool.ntp.org", "time.nist.gov");
+
+    Serial.print ("Waiting for NTP time sync: ");
+    time_t now = time (nullptr);
+    while (now < 8 * 3600 * 2) {
+        delay (500);
+        Serial.print (".");
+        now = time (nullptr);
+    }
+    struct tm timeinfo;
+    gmtime_r (&now, &timeinfo);
+    Serial.print ("\n");
+    Serial.print ("Current time: ");
+    Serial.print (asctime (&timeinfo));
+}
 
 void mqttInit(){
    
@@ -65,3 +79,4 @@ void mqttReconect() {
     }
   }
 }
+
