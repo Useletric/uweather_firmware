@@ -220,3 +220,74 @@ void getID(){
     Serial.print("id: ");
 	Serial.println(resultado, HEX);
 }
+
+void store_sd(const char *nomeArquivo, const JsonDocument& jsonDoc) {
+  // Certifique-se de que o cartão SD está inicializado antes de tentar armazenar dados
+  if (!SD.begin(CS)) {
+    Serial.println("Erro ao inicializar o cartão SD.");
+    return;
+  }
+
+  // Abre ou cria o arquivo no cartão SD
+  File file = SD.open(nomeArquivo, FILE_APPEND);
+  if (!file) {
+    // Se não conseguir abrir o arquivo, tenta criar um novo
+    file = SD.open(nomeArquivo, FILE_WRITE);
+  }
+
+  if (file) {
+    // Serializar o objeto JSON para a string e escrever no arquivo
+    serializeJson(jsonDoc, file);
+    file.println();  // Adicionar uma nova linha para separar entradas sucessivas
+    file.close();
+    Serial.println("Dados armazenados no cartão SD com sucesso.");
+  } else {
+    Serial.println("Erro ao abrir/criar o arquivo no cartão SD.");
+  }
+}
+
+/* Função para carregar arquivo via json e salva dados */
+void loadConfiguration(const char *filename){
+    // Open file for reading
+  File file = SD.open(filename);
+
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
+  StaticJsonDocument<768> doc;
+  // Deserialize the JSON document
+  DeserializationError error = deserializeJson(doc, file);
+  if (error)
+    Serial.println(F("Failed to read file, using default configuration"));
+
+  // Copy values from the JsonDocument to the Config
+    String ssid = doc["ssid"];
+    String password = doc["password"];
+    String mqttServer = doc["mqttServer"];   
+    String idStation = doc["idStation"];
+
+    const int timer_ReadSensors = doc["timer_ReadSensors"];
+    const int timer_MQTTConnection = doc["timer_MQTTConnection"];
+    const int maxTentativasConexao = doc["maxTentativasConexao"];
+    const int mqttPort = doc["mqttPort"];
+    struct_systemConfig.ssid = ssid;
+    struct_systemConfig.password = password;
+    struct_systemConfig.mqttServer = mqttServer;
+    struct_systemConfig.mqttServer = mqttServer;
+    struct_systemConfig.mqttPort = mqttPort;
+    struct_systemConfig.timer_ReadSensors = timer_ReadSensors;
+    struct_systemConfig.timer_MQTTConnection = timer_MQTTConnection;
+    struct_systemConfig.maxTentativasConexao = maxTentativasConexao;
+    
+    Serial.println("\nParâmetros Salvos");
+      Serial.println("SSID: "+String(struct_systemConfig.ssid));
+      Serial.println("PASSWORD: "+String(struct_systemConfig.password));
+      Serial.println("MQTT SERVER: "+String(struct_systemConfig.mqttServer));
+      Serial.println("MQTT PORT: "+String(struct_systemConfig.mqttPort));
+      Serial.println("READ SENSORS TIME: "+String(struct_systemConfig.timer_ReadSensors));
+      Serial.println("TIMER_MQTTCONNECTION: "+String(struct_systemConfig.timer_MQTTConnection));
+      Serial.println("MAX TENTATIVAS: "+String(struct_systemConfig.maxTentativasConexao));
+      
+  // Close the file (Curiously, File's destructor doesn't close the file)
+  file.close();
+} 

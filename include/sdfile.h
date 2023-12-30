@@ -2,6 +2,7 @@
 #define SDFILE_H
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include "FS.h"
 #include "SD.h"
 #include "SPI.h"
@@ -23,6 +24,7 @@ void testFileIO(fs::FS &fs, const char * path);
 
 void debug_sd();
 void init_sd();
-
+void store_sd(const char *nomeArquivo, const JsonDocument& jsonDoc);
 void getID();
+void loadConfiguration(const char *filename);
 #endif

@@ -1,5 +1,7 @@
 #include "mqtt.h"
+#include "structs.h"
 
+extern struct system        struct_systemConfig;
 
 /* instacias para WIFI e client*/
 WiFiClient espClient;
@@ -8,43 +10,32 @@ PubSubClient client(espClient);
 void mqttReconect();
 
 /* configuraçãoes da REDE e broker MQTT*/
-const char* ssid     = "CAFOFO";
-const char* password = "Bc270299";
+const char* ssid     = struct_systemConfig.ssid.c_str();
+const char* password = struct_systemConfig.password.c_str();
 
 
 /* configuraçãoes do broker MQTT*/
 const char* mqttServer = "192.168.10.2";
 const int mqttPort = 1883;
 
-// Set time via NTP, as required for x.509 validation
-void setClock () {
-    configTime (0, 0, "pool.ntp.org", "time.nist.gov");
-
-    Serial.print ("Waiting for NTP time sync: ");
-    time_t now = time (nullptr);
-    while (now < 8 * 3600 * 2) {
-        delay (500);
-        Serial.print (".");
-        now = time (nullptr);
-    }
-    struct tm timeinfo;
-    gmtime_r (&now, &timeinfo);
-    Serial.print ("\n");
-    Serial.print ("Current time: ");
-    Serial.print (asctime (&timeinfo));
-}
 
 void mqttInit(){
    
    WiFi.begin(ssid, password);
 
-   while (WiFi.status() != WL_CONNECTED) {
+   while (WiFi.status() != WL_CONNECTED &&  struct_systemConfig.tentativasConexao < struct_systemConfig.maxTentativasConexao) {
     delay(500);
     Serial.println("Conectando ao WiFi..");
+    struct_systemConfig.tentativasConexao++;
    }
-  Serial.println("Conectado na rede WiFi");
-
-  client.setServer(mqttServer, mqttPort);
+  if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("Conectado na rede WiFi");
+        struct_systemConfig.tentativasConexao = 0;
+        client.setServer(struct_systemConfig.mqttServer.c_str(), struct_systemConfig.mqttPort);
+    } else {
+        Serial.println("Falha ao conectar na rede WiFi. Armazenando dados no cartão SD.");
+        struct_systemConfig.sd_storage = true;
+    }
 
 
 }
@@ -65,18 +56,27 @@ void mqttSend(char mensagem[]){
 //função pra reconectar ao servido MQTT
 void mqttReconect() {
   //Enquanto estiver desconectado
-  while (!client.connected()) {
+  while (!client.connected() && struct_systemConfig.tentativasConexao < struct_systemConfig.maxTentativasConexao) {
+      if (client.connect("ESP32Client")) {
+         Serial.println("Conectado ao broker!");
+         struct_systemConfig.tentativasConexao = 0;
+      } else {
+         Serial.print("Falha na conexao ao broker - Estado: ");
+         Serial.print(client.state());
+         vTaskDelay(pdMS_TO_TICKS(100));
+         struct_systemConfig.tentativasConexao++;
+      }
+   }
 
-    if (client.connect("ESP32Client"))
-    {
-      Serial.println("Conectado ao broker!");
-    }
-    else
-    {
-      Serial.print("Falha na conexao ao broker - Estado: ");
-      Serial.print(client.state());
-      vTaskDelay(pdMS_TO_TICKS(100));
-    }
-  }
+   if (!client.connected() && struct_systemConfig.tentativasConexao >= struct_systemConfig.maxTentativasConexao) {
+      Serial.println("Número máximo de tentativas atingido. Armazenando dados no cartão SD.");
+      // Chame uma função para armazenar os dados no cartão SD aqui
+      struct_systemConfig.sd_storage = true;
+   }
+}
+
+//Função para desconectar da rede
+void mqttDisconnect(){
+  WiFi.disconnect();
 }
 

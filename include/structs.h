@@ -38,13 +38,24 @@
 
         struct system{
             int timer_ReadSensors = 2000;
-            int timer_MQTTConnection = 30000;
+            int timer_MQTTConnection = 30;
             int timer_system = 0;
             char Buffer[254] = "";
             String infoSensor = "";
+            String datetime = "";
             uint32_t chipId = 0;
             uint64_t multiplicador = 0xA93;
+            int maxTentativasConexao = 15;
+            int tentativasConexao = 0;
+            boolean sd_storage = false;
+            /* configuraçãoes da REDE e broker MQTT*/
+            String ssid     = "CAFOFO1";
+            String password = "Bc270299";
+            /* configuraçãoes do broker MQTT*/
+            String mqttServer = "192.168.10.2";
+            int mqttPort = 1883;
 
+            
         };
 
         extern struct anemometro    struct_anemometro;

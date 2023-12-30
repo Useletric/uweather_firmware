@@ -6,7 +6,7 @@ void setup() {
   getID();
   
   init_sd();
-  debug_sd();
+  loadConfiguration("/config.txt");
   initBME280();
   mqttInit();     //iniica comunicação com MQTT
   setClock();

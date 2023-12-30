@@ -4,6 +4,7 @@
     #include "sensor.h"
     #include "mqtt.h"
     #include "sdfile.h"
+    #include "rtc.h"
     
 
 #endif //_MAIN_H_
