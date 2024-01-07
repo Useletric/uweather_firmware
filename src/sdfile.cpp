@@ -291,3 +291,40 @@ void loadConfiguration(const char *filename){
   // Close the file (Curiously, File's destructor doesn't close the file)
   file.close();
 } 
+
+void salvarDados(){
+      StaticJsonDocument<200> doc;
+          doc["datetime"] = struct_systemConfig.datetime;
+          doc["temperature"] = struct_bme280.temp;
+          doc["humidity"] = struct_bme280.umi;
+          doc["pressure"] = struct_bme280.pressure;
+          doc["altitude"] = struct_bme280.altitude;
+          doc["windspeed"] = struct_anemometro.speedwind;
+          doc["solarvolt"] = struct_tensaoPainelSolar.voltage;
+          doc["batvolt"] = struct_tensaoBateriaInterna.voltage;
+
+    store_sd("/uweather_data.txt",doc);
+}
+
+void salvarLeitura() {
+  // Criar um objeto JSON
+  StaticJsonDocument<200> doc;
+  doc["temperature"] = struct_bme280.temp;
+  doc["humidity"] = struct_bme280.umi;
+  doc["pressure"] = struct_bme280.pressure;
+  doc["altitude"] = struct_bme280.altitude;
+  doc["windspeed"] = struct_anemometro.speedwind;
+  doc["solarvolt"] = struct_tensaoPainelSolar.voltage;
+  doc["batvolt"] = struct_tensaoBateriaInterna.voltage;
+
+  // Abrir o arquivo para escrita
+  File file = SD.open("/leituras.txt", FILE_APPEND);
+  if (file) {
+    // Serializar o objeto JSON e escrever no arquivo
+    serializeJson(doc, file);
+    file.println();  // Adicionar uma nova linha para separar entradas sucessivas
+    file.close();
+  } else {
+    Serial.println("Erro ao abrir o arquivo para escrita no cartão SD.");
+  }
+}

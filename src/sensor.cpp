@@ -62,7 +62,10 @@ void windvelocity() {
   struct_anemometro.counter = 0;
   attachInterrupt(digitalPinToInterrupt(SENSOR_PIN), addcount, RISING);
 
-  vTaskDelay(pdMS_TO_TICKS(struct_anemometro.period));
+  unsigned long millis();       
+  long startTime = millis();
+  while(millis() < startTime + struct_anemometro.period) {
+  }
 }
 
 void RPMCalc() {
@@ -110,3 +113,37 @@ float voltageInput(uint8_t portaAnalogica){
     }
   return total / (float)AMOSTRAS;
 }
+
+void readSensors(){
+      Serial.println("Entrou na tarefa Sensor");  // Adicione mensagens de depuração
+
+    Serial.print(": Inicia Leitura Anemometro...");
+
+    // Chama a função para medir a velocidade do vento
+    windvelocity();
+
+    Serial.println("   Finalizado.");
+
+    
+    // Chama a função para calcular o RPM
+    RPMCalc();
+
+    // Chama a função para calcular a velocidade do vento em m/s
+    WindSpeed();
+
+    // Chama a função para calcular a velocidade do vento em km/h
+    SpeedWind();
+
+    // Coleta dados do BME280
+    getDataBME280();
+    // Chama a função para mostrar os dados
+    
+
+    struct_tensaoPainelSolar.voltage = ((voltageInput(VOLT_PIN) * 3.3)/4095)/ (330000.0 / (1000000.0 + 1000000.0));
+    struct_tensaoBateriaInterna.voltage = ((voltageInput(VOLT_BAT)*4.2)/4095)*2;
+    Serial.println(struct_tensaoPainelSolar.voltage);
+
+    salvarLeitura();
+    ShowData();
+}
+

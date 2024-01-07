@@ -5,7 +5,7 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
-
+#include "sdfile.h"
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
@@ -22,4 +22,5 @@ void SpeedWind();
 void addcount();
 float voltageInput(uint8_t portaAnalogica);
 void ShowData();
+void readSensors();
 #endif

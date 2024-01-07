@@ -27,4 +27,6 @@ void init_sd();
 void store_sd(const char *nomeArquivo, const JsonDocument& jsonDoc);
 void getID();
 void loadConfiguration(const char *filename);
+void salvarDados();
+void salvarLeitura();
 #endif
