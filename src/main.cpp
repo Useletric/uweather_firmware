@@ -5,6 +5,8 @@
 
 RTC_DATA_ATTR int bootCount = 0;
 
+
+
 void setup() {
   Serial.begin(115200);
   delay(1000);
@@ -15,6 +17,9 @@ void setup() {
   init_sd();
   loadConfiguration("/config.txt");
   initBME280();
+
+  ota_prep();
+
   struct_systemConfig.datetime = getCurrentDateTime();
   Serial.println(struct_systemConfig.datetime);
   readSensors();
@@ -24,6 +29,7 @@ void setup() {
       mqttIsConected();
       setClock();
     streamingData();
+    fn_update();
   }
   if(struct_systemConfig.sd_storage == true){
     salvarDados();

@@ -52,8 +52,9 @@
             String ssid     = "CAFOFO1";
             String password = "Bc270299";
             /* configuraçãoes do broker MQTT*/
-            String mqttServer = "192.168.10.2";
+            String mqttServer = "";
             int mqttPort = 1883;
+            String frw_version = "v@1.0.0";
 
             
         };
