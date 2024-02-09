@@ -4,6 +4,7 @@
 #define TIME_TO_SLEEP  300UL        /* Time ESP32 will go to sleep (in seconds) */
 
 RTC_DATA_ATTR int bootCount = 0;
+RTC_DATA_ATTR int updateCount = 0;
 
 
 
@@ -11,6 +12,7 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
   ++bootCount;
+  ++updateCount;
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   pinMode(SENSOR_PIN,INPUT);
   getID();
@@ -29,6 +31,10 @@ void setup() {
       mqttIsConected();
       setClock();
     streamingData();
+    
+  }
+  if(updateCount >=6){
+    updateCount = 0;
     fn_update();
   }
   if(struct_systemConfig.sd_storage == true){
