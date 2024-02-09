@@ -53,8 +53,9 @@
             String password = "Bc270299";
             /* configuraçãoes do broker MQTT*/
             String mqttServer = "";
+            String idStation = "";
             int mqttPort = 1883;
-            String frw_version = "v@1.0.0";
+            String frw_version = "v@1.2.2";
 
             
         };

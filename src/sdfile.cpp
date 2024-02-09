@@ -270,6 +270,7 @@ void loadConfiguration(const char *filename){
     const int timer_MQTTConnection = doc["timer_MQTTConnection"];
     const int maxTentativasConexao = doc["maxTentativasConexao"];
     const int mqttPort = doc["mqttPort"];
+    struct_systemConfig.idStation = idStation;
     struct_systemConfig.ssid = ssid;
     struct_systemConfig.password = password;
     struct_systemConfig.mqttServer = mqttServer;

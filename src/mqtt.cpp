@@ -135,6 +135,7 @@ void streamingData(){
   avgDoc["windspeed"] = windspeedAvg;
   avgDoc["solarvolt"] = solarvoltAvg;
   avgDoc["batvolt"] = batvoltAvg;
+  avgDoc["id"] = struct_systemConfig.idStation;
 
   // Converter o objeto JSON para uma string
   char avgMessage[508];
