@@ -31,9 +31,11 @@ void mqttInit(){
   if (WiFi.status() == WL_CONNECTED) {
         Serial.println("Conectado na rede WiFi");
         struct_systemConfig.tentativasConexao = 0;
+        struct_systemConfig.sd_storage = false;
         client.setServer(struct_systemConfig.mqttServer.c_str(), struct_systemConfig.mqttPort);
     } else {
         Serial.println("Falha ao conectar na rede WiFi. Armazenando dados no cartão SD.");
+        struct_systemConfig.tentativasConexao = 0;
         struct_systemConfig.sd_storage = true;
     }
 
