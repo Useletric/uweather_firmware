@@ -55,7 +55,7 @@
             String mqttServer = "";
             String idStation = "";
             int mqttPort = 1883;
-            String frw_version = "v@1.2.3";
+            String frw_version = "v@1.2.4";
 
             
         };
