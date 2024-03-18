@@ -78,11 +78,11 @@ void RPMCalc() {
 }
 
 void WindSpeed() {
-  struct_anemometro.windspeed = ((4 * struct_anemometro.pi * struct_anemometro.radius * struct_anemometro.RPM) / 60) / 1000;
+  struct_anemometro.windspeed = (((4 * struct_anemometro.pi * struct_anemometro.radius * struct_anemometro.RPM) / 60) / 1000)*0.3636;
 }
 
 void SpeedWind() {
-  struct_anemometro.speedwind = (((4 * struct_anemometro.pi * struct_anemometro.radius * struct_anemometro.RPM) / 60) / 1000) * 3.6;
+  struct_anemometro.speedwind = ((((4 * struct_anemometro.pi * struct_anemometro.radius * struct_anemometro.RPM) / 60) / 1000) * 3.6)*0.3636;
 }
 
 void addcount() {
