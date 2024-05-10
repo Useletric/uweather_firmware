@@ -271,7 +271,7 @@ void loadConfiguration(const char *filename){
     const int maxTentativasConexao = doc["maxTentativasConexao"];
     const int mqttPort = doc["mqttPort"];
     struct_systemConfig.idStation = idStation;
-    struct_systemConfig.ssid = ssid;
+    struct_systemConfig.ssid = doc["ssid"].as<String>();
     struct_systemConfig.password = password;
     struct_systemConfig.mqttServer = mqttServer;
     struct_systemConfig.mqttServer = mqttServer;

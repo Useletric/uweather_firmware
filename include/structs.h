@@ -49,8 +49,8 @@
             int tentativasConexao = 0;
             boolean sd_storage = false;
             /* configuraçãoes da REDE e broker MQTT*/
-            String ssid     = "CAFOFO1";
-            String password = "Bc270299";
+            String ssid     = "";
+            String password = "";
             /* configuraçãoes do broker MQTT*/
             String mqttServer = "";
             String idStation = "";

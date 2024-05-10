@@ -10,7 +10,11 @@ PubSubClient client(espClient);
 void mqttReconect();
 
 /* configuraçãoes da REDE e broker MQTT*/
-const char* ssid     = struct_systemConfig.ssid.c_str();
+// Declare uma matriz de caracteres para armazenar o SSID
+char ssid[32]; // Assumindo que o SSID tem no máximo 31 caracteres
+
+// Copie o conteúdo da String para a matriz de caracteres
+
 const char* password = struct_systemConfig.password.c_str();
 
 
@@ -20,7 +24,12 @@ const int mqttPort = 1883;
 
 
 void mqttInit(){
-   
+   // Declare uma matriz de caracteres para armazenar o SSID
+    char ssid[32]; // Assumindo que o SSID tem no máximo 31 caracteres
+
+    // Copie o conteúdo da String para a matriz de caracteres
+    strncpy(ssid, struct_systemConfig.ssid.c_str(), sizeof(ssid) - 1);
+    ssid[sizeof(ssid) - 1] = '\0'; // Certifique-se de terminar a string com null
    WiFi.begin(ssid, password);
 
    while (WiFi.status() != WL_CONNECTED &&  struct_systemConfig.tentativasConexao < struct_systemConfig.maxTentativasConexao) {

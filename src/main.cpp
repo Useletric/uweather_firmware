@@ -25,7 +25,7 @@ void setup() {
   struct_systemConfig.datetime = getCurrentDateTime();
   Serial.println(struct_systemConfig.datetime);
   readSensors();
-  if (bootCount  >= 2) {
+  if (bootCount == 0 ||bootCount >= 2) {
     bootCount = 0;  // Reinicia a contagem
       mqttInit();     //iniica comunicação com MQTT
       mqttIsConected();
