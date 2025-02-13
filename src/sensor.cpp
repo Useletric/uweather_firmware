@@ -2,7 +2,7 @@
 #include "structs.h"
 #include "sensor.h"
 
-Adafruit_BME280 bme; // I2C
+Adafruit_AHTX0 aht; // I2C
 
 extern struct anemometro    struct_anemometro;
 extern struct bme280        struct_bme280;
@@ -14,9 +14,10 @@ void initBME280(){
     Serial.println(F("BME280 test"));
     bool status;
 
+
     // default settings
     // (you can also pass in a Wire library object like &Wire2)
-    status = bme.begin(0x76);  
+    status = aht.begin();  
     if (!status) {
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
@@ -26,32 +27,38 @@ void initBME280(){
 }
 
 float tempBME(){
+    sensors_event_t humidity, temp;
+    aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
     Serial.print("Temperature = ");
-    Serial.print(bme.readTemperature());
+    Serial.print(temp.temperature);
     Serial.println(" *C");
 
-    return bme.readTemperature();
+    return temp.temperature;
 }
 float umiBME(){
+    sensors_event_t humidity, temp;
+    aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
     Serial.print("Humidity = ");
-    Serial.print(bme.readHumidity());
+    Serial.print(humidity.relative_humidity);
     Serial.println(" %");
 
-    return bme.readHumidity();
+    return humidity.relative_humidity;
 }
 float presureBME(){
     Serial.print("Pressure = ");
-    Serial.print(bme.readPressure() / 100.0F);
+    //Serial.print(bme.readPressure() / 100.0F);
     Serial.println(" hPa");
 
-    return bme.readPressure()/100.0F;
+    return 0;
 
 }
 void getDataBME280(){
-    struct_bme280.altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
-    struct_bme280.pressure = bme.readPressure()/100.0F;
-    struct_bme280.temp = bme.readTemperature();
-    struct_bme280.umi = bme.readHumidity();
+    sensors_event_t humidity, temp;
+    aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+    //.altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
+    struct_bme280.pressure = 0;
+    struct_bme280.temp = temp.temperature;
+    struct_bme280.umi = humidity.relative_humidity;
 
 }
 
