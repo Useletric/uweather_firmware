@@ -146,6 +146,8 @@ void streamingData(){
   avgDoc["windspeed"] = windspeedAvg;
   avgDoc["solarvolt"] = solarvoltAvg;
   avgDoc["batvolt"] = batvoltAvg;
+  avgDoc["winddirection"] = struct_biruta.wind_dir;
+  avgDoc["index_rain"] = struct_pluviometro.count;
   avgDoc["id"] = struct_systemConfig.idStation;
 
   // Converter o objeto JSON para uma string
@@ -159,6 +161,8 @@ void streamingData(){
   SD.remove("/leituras.txt");
 
   Serial.println("Dados transmitidos via MQTT.");
+
+  struct_pluviometro.count = 0;
 }
 
 bool shouldEnterDeepSleep() {

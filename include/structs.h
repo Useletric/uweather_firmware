@@ -9,7 +9,7 @@
             const float pi = 3.14159265;     //Número de pi
             int period = 5000;               //Tempo de medida(miliseconds)
             int delaytime = 2000;            //Invervalo entre as amostras (miliseconds)
-            int radius = 147;                //Raio do anemometro(mm)
+            int radius = 300;                //Raio do anemometro(mm)
 
             // --- Variáveis Globais ---
             unsigned int Sample  = 0;        //Armazena o número de amostras
@@ -17,6 +17,17 @@
             unsigned int RPM = 0;            //Rotações por minuto
             float speedwind = 0;             //Velocidade do vento (m/s)
             float windspeed = 0;             //Velocidade do vento (km/h)
+        };
+
+        struct biruta{
+            int wind_dir = 0;
+            String direction = "";
+        };
+
+        struct pluviometro{
+            volatile int count = 0;
+            bool lastState = false;
+            
         };
 
         struct bme280{
@@ -61,6 +72,8 @@
         };
 
         extern struct anemometro    struct_anemometro;
+        extern struct biruta        struct_biruta;
+        extern struct pluviometro   struct_pluviometro;
         extern struct bme280        struct_bme280;
         extern struct tensaoPainel  struct_tensaoPainelSolar;
         extern struct tensaoBateria struct_tensaoBateriaInterna;
