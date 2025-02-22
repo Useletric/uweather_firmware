@@ -13,8 +13,10 @@ void setup() {
   delay(1000);
   ++bootCount;
   ++updateCount;
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  pinMode(SENSOR_PIN,INPUT);
+
+  pinMode(ANEMO_PIN,INPUT);
+  pinMode(RAIN_SENSOR_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(RAIN_SENSOR_PIN), rainTrigger, CHANGE);
   getID();
   init_sd();
   loadConfiguration("/config.txt");
@@ -22,27 +24,33 @@ void setup() {
 
   ota_prep();
 
+  mqttInit();
+  setClock(); 
+
   struct_systemConfig.datetime = getCurrentDateTime();
-  Serial.println(struct_systemConfig.datetime);
-  readSensors();
-  if (bootCount == 0 ||bootCount >= 2) {
-    bootCount = 0;  // Reinicia a contagem
-      mqttInit();     //iniica comunicação com MQTT
-      mqttIsConected();
-      setClock();
-    streamingData();
-    
-  }
-  if(updateCount >=6){
-    updateCount = 0;
-    fn_update();
-  }
-  if(struct_systemConfig.sd_storage == true){
-    salvarDados();
-  }
-  esp_deep_sleep_start();
+ 
 }
 
 void loop() {
-
+  unsigned long currentMillis = millis();
+    
+  if (currentMillis - lastSensorReadTime >= 60000) {
+      lastSensorReadTime = currentMillis;
+      
+      Serial.println("Iniciando leitura dos sensores...");
+      readSensors();
+      
+      struct_systemConfig.datetime = getCurrentDateTime();
+      if (struct_systemConfig.sd_storage) {
+          salvarDados();
+      }
+      
+      mqttIsConected();
+      streamingData();
+      
+      
+      Serial.print("Eventos de chuva detectados: ");
+      Serial.println(struct_pluviometro.count);
+      
+  }
 }
