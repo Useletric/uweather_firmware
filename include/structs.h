@@ -9,7 +9,7 @@
             const float pi = 3.14159265;     //Número de pi
             int period = 5000;               //Tempo de medida(miliseconds)
             int delaytime = 2000;            //Invervalo entre as amostras (miliseconds)
-            int radius = 300;                //Raio do anemometro(mm)
+            int radius = 105;                //Raio do anemometro(mm)
 
             // --- Variáveis Globais ---
             unsigned int Sample  = 0;        //Armazena o número de amostras
