@@ -6,6 +6,11 @@
     #include "sdfile.h"
     #include "rtc.h"
     #include "ota.h"
+
+    #include <WiFiManager.h> 
+    #include <ElegantOTA.h>
+    #include <AsyncTCP.h>
+    #include <ESPAsyncWebServer.h>
     
     #define SENSOR_READ_INTERVAL 60000UL  /* Intervalo de leitura dos sensores em milissegundos */
     unsigned long lastSensorReadTime = 0; // Tempo da última leitura dos sensores
