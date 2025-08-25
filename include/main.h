@@ -6,6 +6,7 @@
     #include "sdfile.h"
     #include "rtc.h"
     #include "ota.h"
+    #include "bluetooth.h"
 
     #include <WiFiManager.h> 
     #include <ElegantOTA.h>
@@ -14,5 +15,8 @@
     
     #define SENSOR_READ_INTERVAL 60000UL  /* Intervalo de leitura dos sensores em milissegundos */
     unsigned long lastSensorReadTime = 0; // Tempo da última leitura dos sensores
+
+    unsigned long lastOtaCheck = 0;
+    const unsigned long otaInterval = 300000; // 5 minutos em ms
 
 #endif //_MAIN_H_

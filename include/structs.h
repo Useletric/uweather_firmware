@@ -64,6 +64,8 @@
             String password = "";
             /* configuraçãoes do broker MQTT*/
             String mqttServer = "";
+            String mqttUser = "desvon_broker";     // Novo
+            String mqttPassword = "D&s2107!"; // Novo
             String idStation = "";
             int mqttPort = 1883;
             String frw_version = "v@1.2.8";

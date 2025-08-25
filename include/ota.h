@@ -6,7 +6,7 @@
 #include <otadrive_esp.h>
 #include <SPIFFS.h>
 
-#define APIKEY "c9122130-9687-49b6-a9a2-082297e0d755"
+#define APIKEY "8082a29d-6b57-4e85-b391-f0aae076343f"
 void ota_prep();
 void fn_update();
 void update();

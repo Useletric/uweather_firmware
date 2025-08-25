@@ -5,12 +5,13 @@
 
 RTC_DATA_ATTR int bootCount = 0;
 RTC_DATA_ATTR int updateCount = 0;
-
+String btName = "EMAP" + String(struct_systemConfig.idStation);  
 AsyncWebServer server(80);
 
 void setup() {
   Serial.begin(115200);
   delay(1000);
+  bluetoothInit(btName.c_str());  // nome que vai aparecer no Bluetooth
   ++bootCount;
   ++updateCount;
 
@@ -53,11 +54,18 @@ void setup() {
     struct_systemConfig.datetime = getCurrentDateTime();
   }
   
- 
+   
 }
 
 void loop() {
   unsigned long currentMillis = millis();
+  bluetoothLoop();  // verifica se chegou algum comando BT
+
+  if (currentMillis - lastOtaCheck >= otaInterval) {
+    lastOtaCheck = currentMillis;
+    Serial.println("🔄 Verificando OTA...");
+    fn_update();  // Checa atualização no servidor
+  }
     
   if (currentMillis - lastSensorReadTime >= 60000) {
       lastSensorReadTime = currentMillis;
@@ -66,12 +74,11 @@ void loop() {
       readSensors();
       
       struct_systemConfig.datetime = getCurrentDateTime();
-      if (struct_systemConfig.sd_storage) {
+
           salvarDados();
           mqttInit();
           mqttIsConected();
           streamingData();
-      }
 
       Serial.print("Eventos de chuva detectados: ");
       Serial.println(struct_pluviometro.count);
