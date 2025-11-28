@@ -1,0 +1,1 @@
+{"ssid":"DesvonDev","password":"seilamano","mqttServer":"217.196.60.220","idStation":"7F86B67DC","timer_ReadSensors":5,"timer_MQTTConnection":30,"maxTentativasConexao":50,"mqttPort":1883,"topic":"weather/sensor/windspeed"}

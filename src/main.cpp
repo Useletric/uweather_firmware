@@ -11,7 +11,7 @@ AsyncWebServer server(80);
 void setup() {
   Serial.begin(115200);
   delay(1000);
-  bluetoothInit(btName.c_str());  // nome que vai aparecer no Bluetooth
+  //bluetoothInit(btName.c_str());  // nome que vai aparecer no Bluetooth
   ++bootCount;
   ++updateCount;
 
@@ -59,7 +59,7 @@ void setup() {
 
 void loop() {
   unsigned long currentMillis = millis();
-  bluetoothLoop();  // verifica se chegou algum comando BT
+ // bluetoothLoop();  // verifica se chegou algum comando BT
 
   if (currentMillis - lastOtaCheck >= otaInterval) {
     lastOtaCheck = currentMillis;

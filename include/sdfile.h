@@ -7,10 +7,10 @@
 #include "SD.h"
 #include "SPI.h"
 
-#define SCK  14
-#define MISO  2
-#define MOSI  15
-#define CS  13
+#define SCK  18
+#define MISO  19
+#define MOSI  23
+#define CS  15
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels);
 void createDir(fs::FS &fs, const char * path);

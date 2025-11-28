@@ -7,8 +7,6 @@ extern struct system struct_systemConfig;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-void mqttReconect();
-
 /* configuraçãoes da REDE e broker MQTT*/
 // Declare uma matriz de caracteres para armazenar o SSID
 char ssid[32]; // Assumindo que o SSID tem no máximo 31 caracteres
@@ -18,7 +16,7 @@ char ssid[32]; // Assumindo que o SSID tem no máximo 31 caracteres
 const char *password = struct_systemConfig.password.c_str();
 
 /* configuraçãoes do broker MQTT*/
-const char *mqttServer = "192.168.10.2";
+const char *mqttServer = "217.196.60.220";
 const int mqttPort = 1883;
 
 void mqttInit()
@@ -40,6 +38,7 @@ void mqttInit()
     struct_systemConfig.tentativasConexao = 0;
     struct_systemConfig.sd_storage = false;
     client.setServer(struct_systemConfig.mqttServer.c_str(), struct_systemConfig.mqttPort);
+    mqttReconect();
   }
   else
   {

@@ -11,6 +11,7 @@
 
 void mqttInit();
 void mqttIsConected();
+void mqttReconect();
 void mqttSend(char mensagem[]);
 void setClock();
 void mqttDisconnect();
