@@ -69,6 +69,7 @@
             String idStation = "";
             int mqttPort = 1883;
             String frw_version = "v@1.2.8";
+            bool bme280Available = true;
 
             
         };

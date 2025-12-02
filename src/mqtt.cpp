@@ -44,7 +44,6 @@ void mqttInit()
   else
   {
     Serial.println("Falha ao conectar na rede WiFi. Armazenando dados no cartão SD.");
-    ESP.restart();
     struct_systemConfig.tentativasConexao = 0;
   }
 }
@@ -125,8 +124,10 @@ void streamingData()
   {
     String line = file.readStringUntil('\n');
     line.trim(); // <-- remove \r, \n e espaços
-    if (line.length() == 0) continue;       // pula linhas vazias
-    if (line[0] == '\0') continue;          // pula nulls residuais
+    if (line.length() == 0)
+      continue; // pula linhas vazias
+    if (line[0] == '\0')
+      continue; // pula nulls residuais
     StaticJsonDocument<512> doc;
     Serial.println(line);
     DeserializationError error = deserializeJson(doc, line);
@@ -162,7 +163,7 @@ void streamingData()
   // Criar um objeto JSON para a média
   StaticJsonDocument<200> avgDoc;
   avgDoc["temperature"] = struct_bme280.temp; // Usar a temperatura atual
-  avgDoc["humidity"] = struct_bme280.umi;       // Usar a umidade atual
+  avgDoc["humidity"] = struct_bme280.umi;     // Usar a umidade atual
   avgDoc["pressure"] = struct_bme280.pressure;
   avgDoc["altitude"] = struct_bme280.altitude;
   avgDoc["windspeed"] = struct_anemometro.speedwind;
@@ -170,6 +171,11 @@ void streamingData()
   avgDoc["batvolt"] = struct_tensaoBateriaInterna.voltage;
   avgDoc["winddirection"] = struct_biruta.wind_dir;
   avgDoc["index_rain"] = struct_pluviometro.count;
+  avgDoc["bme280_status"] = (struct_systemConfig.bme280Available) ? "OK" : "FAIL";
+  avgDoc["wifi_status"] = (WiFi.status() == WL_CONNECTED) ? "OK" : "DISCONNECTED";
+  avgDoc["wifi_rssi"] = WiFi.RSSI();
+
+  avgDoc["mqtt_connected"] = client.connected();
   avgDoc["id"] = struct_systemConfig.idStation;
 
   // Converter o objeto JSON para uma string

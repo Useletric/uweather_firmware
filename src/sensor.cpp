@@ -11,21 +11,18 @@ extern struct tensaoPainel  struct_tensaoPainelSolar;
 extern struct tensaoBateria struct_tensaoBateriaInterna;
 extern struct system        struct_systemConfig;
 
-void initBME280(){
+void initBME280() {
     Serial.println(F("BME280 test"));
-    bool status;
-
-
-    // default settings
-    // (you can also pass in a Wire library object like &Wire2)
-    status = bme.begin(0x76);  
+    bool status = bme.begin(0x76);
     if (!status) {
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
-        while (1);
+        // Em vez de travar, definir uma flag para ignorar leituras ou usar valores padrão
+        struct_systemConfig.bme280Available = false;
+    } else {
+        struct_systemConfig.bme280Available = true;
     }
-
-    Serial.println("-- Default Test --");
 }
+
 
 float tempBME(){
   Serial.print("Temperature = ");
