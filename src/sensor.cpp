@@ -100,7 +100,10 @@ void windvelocity() {
   }
 }
 
+
 void RPMCalc() {
+  Serial.print(struct_anemometro.counter);
+  Serial.println(" pulos detectados.");
   if (struct_anemometro.period != 0) {
     struct_anemometro.RPM = ((struct_anemometro.counter) * 60) / (struct_anemometro.period / 1000);
   } else {
@@ -156,7 +159,7 @@ void IRAM_ATTR rainTrigger(){
 }
 
 void readSensors(){
-      Serial.println("Entrou na tarefa Sensor");  // Adicione mensagens de depuração
+    Serial.println("Entrou na tarefa Sensor");  // Adicione mensagens de depuração
 
     Serial.print(": Inicia Leitura Anemometro...");
 

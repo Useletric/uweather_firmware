@@ -9,8 +9,8 @@
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-#define ANEMO_PIN 33 //
-#define RAIN_SENSOR_PIN 27 //
+#define ANEMO_PIN 33 //27
+#define RAIN_SENSOR_PIN 27 //33
 #define BIRUT_PIN 32 //
 #define VOLT_PIN 36
 #define VOLT_BAT 35

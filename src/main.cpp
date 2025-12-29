@@ -28,7 +28,7 @@ void setup()
 
   pinMode(ANEMO_PIN, INPUT);
   pinMode(RAIN_SENSOR_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(RAIN_SENSOR_PIN), rainTrigger, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(RAIN_SENSOR_PIN), rainTrigger, FALLING  );
   getID();
   init_sd();
   loadConfiguration("/config.txt");

@@ -63,7 +63,7 @@
             String ssid     = "";
             String password = "";
             /* configuraçãoes do broker MQTT*/
-            String mqttServer = "";
+            String mqttServer = "217.196.60.220";
             String mqttUser = "desvon_broker";     // Novo
             String mqttPassword = "D&s2107!"; // Novo
             String idStation = "";
