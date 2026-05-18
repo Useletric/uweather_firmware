@@ -150,13 +150,47 @@ float voltageInput(uint8_t portaAnalogica){
   return total / (float)AMOSTRAS;
 }
 
-void IRAM_ATTR rainTrigger(){
-  bool currentRainState = digitalRead(RAIN_SENSOR_PIN);
-  if (currentRainState != struct_pluviometro.lastState) {
-      struct_pluviometro.count++;
-      struct_pluviometro.lastState = currentRainState;
-  }
+void initRainPCNT() {
+
+    pcnt_config_t pcnt_config = {};
+    pcnt_config.pulse_gpio_num = RAIN_SENSOR_PIN;
+    pcnt_config.ctrl_gpio_num  = PCNT_PIN_NOT_USED;
+    pcnt_config.unit           = RAIN_PCNT_UNIT;
+    pcnt_config.channel        = RAIN_PCNT_CH;
+
+    // Conta apenas borda de descida
+    pcnt_config.pos_mode = PCNT_COUNT_DIS;
+    pcnt_config.neg_mode = PCNT_COUNT_INC;
+
+    pcnt_config.lctrl_mode = PCNT_MODE_KEEP;
+    pcnt_config.hctrl_mode = PCNT_MODE_KEEP;
+
+    pcnt_config.counter_h_lim = PCNT_H_LIM_VAL;
+    pcnt_config.counter_l_lim = 0;
+
+    pcnt_unit_config(&pcnt_config);
+
+    // Debounce por hardware (~1ms)
+    pcnt_set_filter_value(RAIN_PCNT_UNIT, 1000);
+    pcnt_filter_enable(RAIN_PCNT_UNIT);
+
+    pcnt_counter_pause(RAIN_PCNT_UNIT);
+    pcnt_counter_clear(RAIN_PCNT_UNIT);
+    pcnt_counter_resume(RAIN_PCNT_UNIT);
+
+    Serial.println("PCNT Pluviometro inicializado");
 }
+
+
+void readRainPCNT() {
+    int16_t rawCount = 0;
+    pcnt_get_counter_value(RAIN_PCNT_UNIT, &rawCount);
+
+    struct_pluviometro.count = (uint32_t) rawCount;
+    struct_pluviometro.mm_acumulado =
+        struct_pluviometro.count * RAIN_MM_POR_PULSO;
+}
+
 
 void readSensors(){
     Serial.println("Entrou na tarefa Sensor");  // Adicione mensagens de depuração
@@ -181,7 +215,8 @@ void readSensors(){
     // Coleta dados do BME280
     getDataBME280();
     // Chama a função para mostrar os dados
-    
+    readRainPCNT();
+
 
     struct_tensaoPainelSolar.voltage = ((voltageInput(VOLT_PIN) * 3.3)/4095)/ (1000000.0 / (1000000.0 + 1000000.0));
     struct_tensaoBateriaInterna.voltage = ((voltageInput(VOLT_BAT)*4.2)/4095)*2;
@@ -192,3 +227,32 @@ void readSensors(){
     ShowData();
 }
 
+void resetRainDaily() {
+
+    // datetime no formato: "YYYY-MM-DD HH:MM:SS"
+    String dt = struct_systemConfig.datetime;
+
+    if (dt.length() < 10) return;
+
+    int currentDay = dt.substring(8, 10).toInt();
+
+    if (struct_systemConfig.lastRainResetDay == -1) {
+        // Primeira execução após boot
+        struct_systemConfig.lastRainResetDay = currentDay;
+        return;
+    }
+
+    if (currentDay != struct_systemConfig.lastRainResetDay) {
+
+        // Reset PCNT
+        pcnt_counter_clear(RAIN_PCNT_UNIT);
+
+        // Reset struct
+        struct_pluviometro.count = 0;
+        struct_pluviometro.mm_acumulado = 0;
+
+        struct_systemConfig.lastRainResetDay = currentDay;
+
+        Serial.println("🌧️ Reset diario do pluviometro executado");
+    }
+}

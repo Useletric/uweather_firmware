@@ -28,7 +28,8 @@ void setup()
 
   pinMode(ANEMO_PIN, INPUT);
   pinMode(RAIN_SENSOR_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(RAIN_SENSOR_PIN), rainTrigger, CHANGE  );
+  initRainPCNT();
+
   getID();
   init_sd();
   loadConfiguration("/config.txt");
@@ -96,6 +97,7 @@ void loop()
       readSensors();
 
       struct_systemConfig.datetime = getCurrentDateTime();
+      resetRainDaily();
 
       salvarDados();
       mqttInit();

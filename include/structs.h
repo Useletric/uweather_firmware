@@ -25,9 +25,8 @@
         };
 
         struct pluviometro{
-            volatile int count = 0;
-            bool lastState = false;
-            
+            uint32_t count = 0;        // valor lido do PCNT
+            float mm_acumulado = 0;    // chuva convertida
         };
 
         struct bme280{
@@ -68,9 +67,9 @@
             String mqttPassword = "D&s2107!"; // Novo
             String idStation = "";
             int mqttPort = 1883;
-            String frw_version = "v@1.2.8";
+            String frw_version = "v@1.3.0";
             bool bme280Available = true;
-
+            int lastRainResetDay = -1;   // dia do último reset
             
         };
 

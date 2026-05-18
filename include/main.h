@@ -17,6 +17,6 @@
     unsigned long lastSensorReadTime = 0; // Tempo da última leitura dos sensores
 
     unsigned long lastOtaCheck = 0;
-    const unsigned long otaInterval = 300000; // 5 minutos em ms
+    const unsigned long otaInterval = 900000; // 5 minutos em ms
 
 #endif //_MAIN_H_
